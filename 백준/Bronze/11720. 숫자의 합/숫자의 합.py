@@ -1,5 +1,5 @@
 n = int(input())
-li = list(input())
+li = input()
 result = 0
 for elem in li:
     result += int(elem)
