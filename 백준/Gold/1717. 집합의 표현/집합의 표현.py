@@ -1,6 +1,6 @@
 import sys
 
-sys.setrecursionlimit(10 ** 5)
+sys.setrecursionlimit(10 ** 6)
 input = sys.stdin.readline
 
 MN = 1000001
@@ -20,8 +20,8 @@ def find(x: int) -> int:
 
 
 def unite(x: int, y: int):
-    x=find(x)
-    y=find(y)
+    x = find(x)
+    y = find(y)
     par[x] = y
 
 
