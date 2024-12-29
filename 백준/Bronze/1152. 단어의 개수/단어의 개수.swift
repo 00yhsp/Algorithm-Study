@@ -1,3 +1,12 @@
-import Foundation
+let str = readLine()!
 
-print(readLine()!.trimmingCharacters(in: .whitespaces).split(separator: " ").count)
+var count = 1
+
+for elem in str {
+    if elem == " " { count += 1 }
+}
+
+if str.first! == " " { count -= 1 }
+if str.last! == " " { count -= 1 }
+
+print(count)
