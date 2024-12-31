@@ -2,12 +2,15 @@ import Foundation
 
 _ = readLine()
 
-let arr = readLine()!.map { Int($0.asciiValue!) - 96 }
+let arr = readLine()!.map { UInt64($0.asciiValue!) - 96 }
 
-var sum = 0
+var sum: UInt64 = 0
 
 for i in 0..<arr.count {
-    sum += arr[i] * Int(pow(Double(31), Double(i)))
+    var pow: UInt64 = 1
+    for _ in 0..<i { pow = (pow * 31) % 1234567891 }
+    pow = (arr[i] * pow) % 1234567891
+    sum = (sum + pow) % 1234567891
 }
 
-print(sum % 1234567891)
+print(sum)
