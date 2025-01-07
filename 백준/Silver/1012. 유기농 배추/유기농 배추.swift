@@ -1,10 +1,9 @@
 let n = Int(readLine()!)!
 
 let directions = [ (-1, 0), (1, 0), (0, -1), (0, 1) ]
+
 var output = ""
-for _ in 0..<n {
-    solution()
-}
+for _ in 0..<n { solution() }
 print(output, terminator: "")
 
 func solution() {
