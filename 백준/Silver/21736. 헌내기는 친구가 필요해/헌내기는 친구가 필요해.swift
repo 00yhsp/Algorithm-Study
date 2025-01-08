@@ -26,16 +26,18 @@ print(count == 0 ? "TT" : count)
 func dfs() {
     var stack = Stack<(Int, Int)>()
     stack.push(start)
+    visited[start.1][start.0] = true
 
     while !stack.isEmpty {
         let (curX, curY) = stack.pop()!
-        if visited[curY][curX] { continue }
-        visited[curY][curX] = true
         if board[curY][curX] == "P" { count += 1 }
 
         for (dX, dY) in directions {
             let nX = curX + dX, nY = curY + dY
-            if !visited[nY][nX] { stack.push((nX, nY)) }
+            if !visited[nY][nX] {
+                visited[nY][nX] = true
+                stack.push((nX, nY))
+            }
         }
     }
 }
