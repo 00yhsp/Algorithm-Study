@@ -26,15 +26,15 @@ func solution() {
             if let min = minHeap.pop() { deleted[min.1] = true }
         }
     }
-    cleanHeap(&minHeap, deleted: &deleted, cleanAll: true)
-    cleanHeap(&maxHeap, deleted: &deleted, cleanAll: true)
+    cleanHeap(&minHeap, deleted: &deleted)
+    cleanHeap(&maxHeap, deleted: &deleted)
+
     if minHeap.isEmpty { print("EMPTY") }
     else { print(maxHeap.peek!.0, minHeap.peek!.0) }
 }
 
-func cleanHeap(_ heap: inout Heap<(Int, Int)>, deleted: inout [Bool], cleanAll: Bool = false) {
-    if cleanAll { heap.filter { !deleted[$0.1] } }
-    else { while let top = heap.peek, deleted[top.1] { heap.pop() } }
+func cleanHeap(_ heap: inout Heap<(Int, Int)>, deleted: inout [Bool]) {
+    while let top = heap.peek, deleted[top.1] { heap.pop() }
 }
 
 struct Heap<T> {
@@ -97,13 +97,6 @@ struct Heap<T> {
             if candidateIndex == parentIndex { break }
             elements.swapAt(parentIndex, candidateIndex)
             parentIndex = candidateIndex
-        }
-    }
-
-    mutating func filter(_ isIncluded: (T) -> Bool) {
-        elements = elements.filter(isIncluded)
-        for i in stride(from: (elements.count - 2) / 1, through: 0, by: -1) {
-            siftDown(i)
         }
     }
 }
