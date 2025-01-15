@@ -1,11 +1,6 @@
 let t = Int(readLine()!)!
 
-let operations = [
-    (d, "D", 1),
-    (s, "S", 2),
-    (l, "L", 3),
-    (r, "R", 4)
-]
+let operations = [(d, 1), (s, 2), (l, 3), (r, 4)]
 
 var visited = Array(repeating: false, count: 10000)
 
@@ -28,7 +23,7 @@ func bfs(_ start: Int, _ end: Int) -> String {
     while !queue.isEmpty {
         let (node, path) = queue.dequeue()!
         if node == end { return itoa(path) }
-        for (op, _, idx) in operations {
+        for (op, idx) in operations {
             let next = op(node)
             if !visited[next] {
                 visited[next] = true
@@ -43,7 +38,13 @@ func bfs(_ start: Int, _ end: Int) -> String {
 func itoa(_ n: Int) -> String {
     var str = ""
     for i in String(n) {
-        str += operations[Int(String(i))! - 1].1
+        switch operations[Int(String(i))! - 1].1 {
+        case 1: str += "D"
+        case 2: str += "S"
+        case 3: str += "L"
+        case 4: str += "R"
+        default: break
+        }
     }
     return str
 }
