@@ -15,7 +15,7 @@ for i in 0..<n {
 }
 
 var minDistance = Int.max
-var selected = Array(repeating: false, count: chickens.count)
+var visited = Array(repeating: false, count: chickens.count)
 
 backtrack(0, 0)
 print(minDistance)
@@ -27,7 +27,7 @@ func backtrack(_ start: Int, _ count: Int) {
         for house in houses {
             var houseMinDistance = Int.max
             for i in 0..<chickens.count {
-                if selected[i] {
+                if visited[i] {
                     houseMinDistance = min(houseMinDistance, abs(house.0 - chickens[i].0) + abs(house.1 - chickens[i].1))
                 }
             }
@@ -39,10 +39,10 @@ func backtrack(_ start: Int, _ count: Int) {
     }
 
     for i in start..<chickens.count {
-        if !selected[i] {
-            selected[i] = true
+        if !visited[i] {
+            visited[i] = true
             backtrack(i + 1, count + 1)
-            selected[i] = false
+            visited[i] = false
         }
     }
 }
