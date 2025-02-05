@@ -4,16 +4,17 @@ while let input = readLine() { nodes.append(Int(input)!) }
 postOrder(0, nodes.count)
 
 func findRightIndex(_ start: Int, _ end: Int) -> Int {
-    var higherIndex = end
-
-    for i in start ..< end {
-        if nodes[i] > nodes[start - 1] {
-            higherIndex = i
-            break
+    let key = nodes[start - 1]
+    var start = start, end = end
+    while start < end {
+        let mid = (start + end) / 2
+        if nodes[mid] < key {
+            start = mid + 1
+        } else {
+            end = mid
         }
     }
-
-    return higherIndex
+    return start
 }
 
 func postOrder(_ start: Int, _ end: Int) {
