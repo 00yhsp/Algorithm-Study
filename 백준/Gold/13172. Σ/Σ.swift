@@ -1,8 +1,8 @@
 let mod = 1_000_000_007
-let t = Int(readLine()!)!
+let m = Int(readLine()!)!
 var result = 0
 
-for _ in 0..<t {
+for _ in 0..<m {
     let input = readLine()!.split(separator: " ").map { Int($0)! }
     var (n, s) = (input[0], input[1])
 
