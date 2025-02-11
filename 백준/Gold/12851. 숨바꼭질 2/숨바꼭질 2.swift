@@ -1,6 +1,4 @@
-import Foundation
-
-let nk = readLine()!.split(separator: " ").map { Int($0)! }
+let nk = readLine()!.split(separator: " ").compactMap { Int($0) }
 let n = nk[0], k = nk[1]
 
 var depths = Array(repeating: Int.max, count: 100001)
@@ -25,14 +23,14 @@ func bfs(_ n: Int, _ k: Int) {
         let (curNode, depth) = queue.dequeue()!
         let nextDepth = depth + 1
 
-        for next in [curNode - 1, curNode + 1, curNode * 2] {
-            if next < 0 || next > 100000 { continue }
-            if depths[next] == Int.max {
-                depths[next] = nextDepth
-                paths[next] = paths[curNode]
-                queue.enqueue((next, nextDepth))
-            } else if depths[next] == nextDepth {
-                paths[next] += paths[curNode]
+        for nextNode in [curNode - 1, curNode + 1, curNode * 2] {
+            if nextNode < 0 || nextNode > 100000 { continue }
+            if depths[nextNode] == Int.max {
+                depths[nextNode] = nextDepth
+                paths[nextNode] = paths[curNode]
+                queue.enqueue((nextNode, nextDepth))
+            } else if depths[nextNode] == nextDepth {
+                paths[nextNode] += paths[curNode]
             }
         }
     }
