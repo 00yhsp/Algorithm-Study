@@ -13,8 +13,6 @@ for i in 0..<r {
     if row[0] == -1 { cleaners.append(i) }
 }
 
-cleaners.sort()
-
 for _ in 0..<t {
     diffusion()
     clean()
