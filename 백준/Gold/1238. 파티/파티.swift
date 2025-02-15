@@ -2,21 +2,23 @@ let nmx = readLine()!.split(separator: " ").compactMap { Int($0) }
 let (n, m, x) = (nmx[0], nmx[1], nmx[2])
 let INF = 100001
 var graph = [Int: [(Int, Int)]]()
+var reverseGraph = [Int: [(Int, Int)]]()
 var weights = Array(repeating: 0, count: n + 1)
 
 for _ in 0..<m {
     let uvw = readLine()!.split(separator: " ").compactMap { Int($0) }
     let (u, v, w) = (uvw[0], uvw[1], uvw[2])
     graph[u, default: []].append((v, w))
+    reverseGraph[v, default: []].append((u, w))
 }
 
-for i in 1...n { weights[i] += dijkstra(i)[x] }
-let xToI = dijkstra(x)
-for i in 1...n { weights[i] += xToI[i] }
+let iToX = dijkstra(reverseGraph, x)
+let xToI = dijkstra(graph, x)
+for i in 1...n { weights[i] += iToX[i] + xToI[i] }
 
 print(weights.max()!)
 
-func dijkstra(_ start: Int) -> [Int] {
+func dijkstra(_ graph: [Int: [(Int, Int)]], _ start: Int) -> [Int] {
     var distance = Array(repeating: INF, count: n + 1)
     distance[start] = 0
     var heap = Heap<(Int, Int)> { $0.1 < $1.1 }
