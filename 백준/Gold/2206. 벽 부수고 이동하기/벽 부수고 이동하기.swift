@@ -25,7 +25,7 @@ func bfs(_ coord: (Int, Int)) -> Int {
             if nR < 0 || nR >= n || nC < 0 || nC >= m { continue }
 
             if board[nR][nC] == 1 && broken == 1 && !visited[nR][nC][0] {
-                visited[nR][nC][broken] = true
+                visited[nR][nC][0] = true
                 queue.enqueue((nR, nC, depth + 1, 0))
             }
             if board[nR][nC] == 0 && !visited[nR][nC][broken] {
