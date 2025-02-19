@@ -42,6 +42,7 @@ func calcTimes() -> Int {
         for space in spaces {
             infectBFS(space)
         }
+        spaces = []
         result += 1
     }
 
