@@ -23,8 +23,7 @@ func solution(_ jobs:[[Int]]) -> Int {
         while let last = jobs.last, last.0 <= time {
             heap.push(jobs.removeLast())
         }
-        if !heap.isEmpty {
-            let popped = heap.pop()!
+        if let popped = heap.pop() {
             time += popped.time
             totalTurnAroundTime += time - popped.requestTime
         } else {
@@ -103,6 +102,8 @@ struct Heap {
             }
             if parentIndex == candidateIndex { break }
             elements.swapAt(parentIndex, candidateIndex)
+            parentIndex = candidateIndex
         }
     }
 }
+
