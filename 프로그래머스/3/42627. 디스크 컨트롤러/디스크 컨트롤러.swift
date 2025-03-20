@@ -26,10 +26,8 @@ func solution(_ jobs:[[Int]]) -> Int {
         if let popped = heap.pop() {
             time += popped.time
             totalTurnAroundTime += time - popped.requestTime
-        } else {
-            if let last = jobs.last {
-                time = last.0
-            }
+        } else if let last = jobs.last {
+            time = last.0
         }
     }
     
@@ -88,12 +86,13 @@ struct Heap {
     mutating func siftDown(_ index: Int) {
         var parentIndex = index
         let count = elements.count
-        
+        let parent = elements[parentIndex]
+
         while true {
             let leftIndex = parentIndex * 2 + 1
             let rightIndex = parentIndex * 2 + 2
             var candidateIndex = parentIndex
-            
+
             if leftIndex < count, priority(elements[leftIndex], elements[candidateIndex]) {
                 candidateIndex = leftIndex
             }
@@ -101,9 +100,11 @@ struct Heap {
                 candidateIndex = rightIndex
             }
             if parentIndex == candidateIndex { break }
-            elements.swapAt(parentIndex, candidateIndex)
+
+            elements[parentIndex] = elements[candidateIndex]
             parentIndex = candidateIndex
         }
+
+        elements[parentIndex] = parent
     }
 }
-
