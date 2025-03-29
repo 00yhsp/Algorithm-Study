@@ -1,5 +1,7 @@
 import Foundation
 
+
+
 func solution(_ word:String) -> Int {
     let chrs = ["A", "E", "I", "O", "U"]
     var count = 0
@@ -10,9 +12,7 @@ func solution(_ word:String) -> Int {
         if current.count == 5 { return }  
         
         for c in chrs {
-            if current.count < 5 {
-                dfs(current + c)   
-            }
+            dfs(current + c)
         }
     }
     dfs("")
