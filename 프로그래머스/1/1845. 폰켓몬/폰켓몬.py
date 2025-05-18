@@ -1,23 +1,21 @@
 def solution(nums):
-    dic = {}
-    result_dic = {}
-    for num in nums:
-        if num in dic:
-            dic[num] = dic[num] + 1
-        else:
-            dic[num] = 1
+    numDict = {}
+    selectDict = {}
+    idx = 0
     count = 0
-    answer = 0
-    length = len(dic)
+    for num in nums:
+        if num not in numDict:
+            numDict[num] = 1
+        else:
+            numDict[num] += 1
     while True:
-        for i in dic:
-            if i in result_dic:
-                result_dic[i] = result_dic[i] + 1
+        keys = numDict.keys()
+        for key in keys:
+            numDict[key] -= 1
+            if key not in selectDict:
+                selectDict[key] = 1
             else:
-                result_dic[i] = 1
-                answer += 1
+                selectDict[key] += 1
             count += 1
-            if count == len(nums) // 2: 
-                return answer 
-            
-    return 0
+            if count == len(nums) // 2:
+                return len(selectDict)
