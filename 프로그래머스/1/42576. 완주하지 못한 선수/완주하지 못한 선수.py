@@ -1,16 +1,18 @@
 def solution(participant, completion):
-    pt_dict = {}
-    for pt in participant:
-        if pt in pt_dict:
-            pt_dict[pt] += 1
+    completed = {}
+    participated = {}
+    for part in participant:
+        if part in participated:
+            participated[part] += 1
         else:
-            pt_dict[pt] = 1
-    for cmp in completion:
-        if cmp in pt_dict:
-            if pt_dict[cmp] == 1:
-                del pt_dict[cmp]
-            else:
-                pt_dict[cmp] -= 1
-    for k in pt_dict:
-        return k
-    
+            participated[part] = 1
+    for comp in completion:
+        if comp in completed:
+            completed[comp] += 1
+        else:
+            completed[comp] = 1
+    for part in participant:
+        if part not in completed:
+            return part
+        if participated[part] != completed[part]:
+            return part
