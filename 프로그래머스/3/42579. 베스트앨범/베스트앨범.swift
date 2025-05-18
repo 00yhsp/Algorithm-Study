@@ -1,27 +1,26 @@
 import Foundation
 
 func solution(_ genres:[String], _ plays:[Int]) -> [Int] {
-    var summaries = [String: Int]()
-    var infos = [String: [(play: Int, id: Int)]]()
-    var bestAlbum = [Int]()
-                 
-    let length = genres.count
-    for idx in 0..<length {
-        summaries[genres[idx], default: 0] += plays[idx]
-        infos[genres[idx], default: []].append((play: plays[idx], id: idx))
+    let count = genres.count
+    var totalPlays = [String: [(Int, Int)]]()
+    var results = [Int]()
+    
+    for i in 0..<count {
+        totalPlays[genres[i], default: []].append((i, plays[i]))
+    }
+    let sortedKeys = totalPlays.keys.sorted { 
+        totalPlays[$0, default: []].reduce(0) { $0 + $1.1 } > 
+        totalPlays[$1, default: []].reduce(0) { $0 + $1.1 }
     }
     
-    let priority = summaries.keys.sorted { summaries[$0]! > summaries[$1]! }
-    for key in priority {
-        let sortedInfos = infos[key, default: []].sorted { 
-            if $0.play == $1.play {
-                return $0.id < $1.id
-            }
-            return $0.play > $1.play
+    for key in sortedKeys {
+        let arr = totalPlays[key, default: []].sorted { 
+            if $0.1 == $1.1 { return $0.0 < $1.0 }
+            else { return $0.1 > $1.1 }
         }
-        bestAlbum.append(sortedInfos[0].id)
-        if sortedInfos.count > 1 { bestAlbum.append(sortedInfos[1].id) }
+        if arr.count == 1 { results.append(arr[0].0) }
+        else { results.append(arr[0].0); results.append(arr[1].0); }
     }
     
-    return bestAlbum
+    return results
 }
