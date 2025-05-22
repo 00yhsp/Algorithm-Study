@@ -1,23 +1,22 @@
 import Foundation
 
 func solution(_ bridge_length:Int, _ weight:Int, _ truck_weights:[Int]) -> Int {
-    var truck_weights_reversed = Array(truck_weights.reversed())
     var seconds = 0
-    var weightOnBridge = 0
-    var queue = Queue()
+    var trucks = Array(truck_weights.reversed())
+    var bridge = Queue()
+    var curWeight = 0
     
-    while !(truck_weights_reversed.isEmpty && queue.isEmpty) {
-        queue.cross()
-        if queue.first?.1 == 0 {
-            let (poppedWeight, _) = queue.dequeue()!
-            weightOnBridge -= poppedWeight
-        }
-        if let last = truck_weights_reversed.last, last + weightOnBridge <= weight, queue.count + 1 <= bridge_length {
-            truck_weights_reversed.popLast()
-            queue.enqueue((last, bridge_length))
-            weightOnBridge += last
-        }
+    while !(trucks.isEmpty && bridge.isEmpty) {
+        
+        bridge.cross()
+        if bridge.first?.1 == 0 { curWeight -= bridge.dequeue()!.0 }
         seconds += 1
+        
+        if !trucks.isEmpty, trucks.last! + curWeight <= weight, bridge.count < bridge_length {
+            let truck = trucks.removeLast()
+            bridge.enqueue((truck, bridge_length))
+            curWeight += truck
+        }
     }
     return seconds
 }
@@ -44,7 +43,7 @@ struct Queue {
     }
     
     mutating func cross() {
-        _inStack = _inStack.map { ($0.0, $0.1 - 1) }
-        _outStack = _outStack.map { ($0.0, $0.1 - 1) }
+        for i in 0..<_inStack.count { _inStack[i].1 -= 1 }
+        for i in 0..<_outStack.count { _outStack[i].1 -= 1 }
     }
 }
