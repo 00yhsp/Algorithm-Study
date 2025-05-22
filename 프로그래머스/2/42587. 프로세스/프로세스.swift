@@ -1,20 +1,19 @@
 import Foundation
 
 func solution(_ priorities:[Int], _ location:Int) -> Int {
-    var sortedPriorities = priorities.sorted(by: <)
-    var scheduler = Queue(elements: priorities)
-    var result = 0
+    var rank = 0
+    var queue = Queue(elements: priorities)
+    var max = priorities.sorted(by: >)
     
-    while true {
-        if scheduler.first!.0 < sortedPriorities.last! {
-            scheduler.enqueue(scheduler.dequeue()!)
-        } else {
-            sortedPriorities.popLast()
-            let (poppedElement, poppedLocation) = scheduler.dequeue()!
-            result += 1
-            if poppedLocation == location { return result }
+    while !queue.isEmpty {
+        let first = queue.dequeue()!
+        if first.1 < max[rank] { queue.enqueue(first) }
+        else { 
+            rank += 1
+            if first.0 == location { return rank }
         }
     }
+    
     return 0
 }
 
@@ -27,7 +26,7 @@ struct Queue {
     
     init(elements: [Int]) {
         let count = elements.count
-        _inStack = (0..<count).map { (elements[$0], $0) }
+        _inStack = (0..<count).map { ($0, elements[$0]) }
     }
     
     mutating func enqueue(_ element: (Int, Int)) {
