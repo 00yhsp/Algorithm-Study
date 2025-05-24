@@ -1,18 +1,17 @@
-let nm = readLine()!.split(separator: " ").map { Int($0)! }
-let n = nm[0], m = nm[1]
-var result = [Int]()
-
+let nm = readLine()!.split(separator: " ").compactMap { Int($0) }
+let (n, m) = (nm[0], nm[1])
+var seq = [Int]()
+backtrack(1)
 func backtrack(_ start: Int) {
-    if result.count == m {
-        print(result.map { String($0) }.joined(separator: " "))
+    if seq.count == m {
+        seq.forEach { print($0, terminator: " ") }
+        print()
         return
     }
     if start > n { return }
     for i in start...n {
-        result.append(i)
+        seq.append(i)
         backtrack(i + 1)
-        _ = result.popLast()
+        _ = seq.popLast()
     }
 }
-
-backtrack(1)
