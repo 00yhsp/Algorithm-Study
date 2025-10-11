@@ -1,22 +1,24 @@
 let n = Int(readLine()!)!
-let vertices = Int(readLine()!)!
-var dict = [Int:[Int]]()
-var visited = Array(repeating: false, count: n + 1)
+let e = Int(readLine()!)!
+var graph = [Int: [Int]]()
+var result = 0
+var visited = [Bool](repeating: false, count: n + 1)
 
-for _ in 0..<vertices {
-    let input = readLine()!.split(separator: " ").map { Int($0)! }
-    let n = input[0], m = input[1]
-    dict[n, default: []].append(m)
-    dict[m, default: []].append(n)
+for _ in 0..<e {
+    let input = readLine()!.split(separator: " ").compactMap { Int($0) }
+    graph[input[0], default: []].append(input[1])
+    graph[input[1], default: []].append(input[0])
 }
-
 dfs(1)
-visited[1] = false
-print(visited.filter { $0 }.count)
+print(result)
 
-func dfs(_ v: Int) {
-    visited[v] = true
-    for node in dict[v, default: []] {
-        if !visited[node] { dfs(node) }
+
+func dfs(_ x: Int) {
+    visited[x] = true
+    for next in graph[x, default: []] {
+        if !visited[next] { 
+            result += 1
+            dfs(next) 
+        }
     }
 }
