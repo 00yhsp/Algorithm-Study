@@ -1,52 +1,52 @@
 import Foundation
 
 func solution(_ numbers:[Int], _ target:Int) -> Int {
-    let count = numbers.count
     var result = 0
     
     func bfs() {
         var queue = Queue()
-        queue.enqueue((0, -1))
+        queue.enqueue((0, 0))
         
         while !queue.isEmpty {
-            let (currentNode, currentDepth) = queue.dequeue()!
-            if currentDepth == count - 1 {
+            let (currentNode, currentDepth) = queue.dequeue()
+            if currentDepth == numbers.count {
                 if currentNode == target { result += 1 }
                 continue
             }
-            for op in operations.allCases {
-                switch op {
-                case .plus:
-                    queue.enqueue((currentNode + numbers[currentDepth + 1], currentDepth + 1))
-                case .minus:
-                    queue.enqueue((currentNode - numbers[currentDepth + 1], currentDepth + 1))
-                }
-            }
+            
+            queue.enqueue((currentNode + numbers[currentDepth], currentDepth + 1))
+            queue.enqueue((currentNode - numbers[currentDepth], currentDepth + 1))
         }
     }
+    
     bfs()
+    
     return result
 }
 
 struct Queue {
-    var _inStack = [(Int, Int)]()
-    var _outStack = [(Int, Int)]()
+    typealias Element = (Int, Int)
     
-    var isEmpty: Bool { _inStack.isEmpty && _outStack.isEmpty }
+    var inputStack = [Element]()
+    var outputStack = [Element]()
     
-    mutating func enqueue(_ element: (Int, Int)) {
-        _inStack.append(element)
+    var isEmpty: Bool { inputStack.isEmpty && outputStack.isEmpty }
+    var count: Int { inputStack.count + outputStack.count }
+    
+    init(_ elements: [Element] = []) {
+        outputStack = elements.reversed()
     }
     
-    mutating func dequeue() -> (Int, Int)? {
-        if _outStack.isEmpty {
-            _outStack = _inStack.reversed()
-            _inStack = []
+    mutating func enqueue(_ element: Element) {
+        inputStack.append(element)
+    }
+    
+    @discardableResult
+    mutating func dequeue() -> Element {
+        if outputStack.isEmpty { 
+            outputStack = inputStack.reversed()
+            inputStack.removeAll()
         }
-        return _outStack.popLast()
+        return outputStack.removeLast()
     }
-}
-
-enum operations: CaseIterable {
-    case plus, minus
 }
