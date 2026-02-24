@@ -1,86 +1,59 @@
 import Foundation
 
+func isReplacable(_ base: String, _ target: String) -> Bool {
+    let base = Array(base)
+    let target = Array(target)
+    let count = base.count
+    var flag = 0
+    
+    for i in 0..<count {
+        if base[i] != target[i] { flag += 1 }
+        if flag > 1 { return false }
+    }
+    
+    return flag == 1 ? true : false
+}
+
 func solution(_ begin:String, _ target:String, _ words:[String]) -> Int {
-    let wordCount = words[0].count
-    let count = words.count
-    var graph = [Int: [Int]]()
-    var result = 51
-    
-    if !words.contains(target) { return 0 }
-    
-    for i in (0..<count) { 
-        if isConnected(begin, words[i], wordCount) {
-            graph[i, default: []].append(-1)
-            graph[-1, default: []].append(i)
-        }
-    }
-    
-    if graph[-1] == nil { return 0 }
-    
-    for i in (0..<count - 1) {
-        for j in (i + 1..<count) {
-            if isConnected(words[i], words[j], wordCount) {
-                graph[i, default: []].append(j)
-                graph[j, default: []].append(i)
-            }            
-        }
-    }
-    
-    func bfs(_ target: Int) {
-        var visited = [Bool](repeating: false, count: count)
+    func bfs() -> Int {
         var queue = Queue()
-        queue.enqueue((-1, 0))
+        queue.enqueue((0, begin))
+        var isVisited = [Bool](repeating: false, count: words.count)
         
         while !queue.isEmpty {
-            let (currentNode, currentDepth) = queue.dequeue()!
-            if currentNode == target {
-                result = min(result, currentDepth)
-            }
-            for nextNode in graph[currentNode, default: []] {
-                if nextNode == -1 { continue }
-                if !visited[nextNode] {
-                    visited[nextNode] = true
-                    queue.enqueue((nextNode, currentDepth + 1))
+            let (curDepth, curWord) = queue.dequeue()
+            
+            if curWord == target { return curDepth }
+            
+            for (idx, word) in words.enumerated() {
+                if !isVisited[idx] && isReplacable(curWord, word) {
+                    queue.enqueue((curDepth + 1, word))
+                    isVisited[idx] = true
                 }
             }
         }
+        
+        return 0
     }
     
-    bfs(words.firstIndex { $0 == target }!)
-    
-    if result == 51 { return 0 }
+    let result = bfs()
     return result
 }
 
-func isConnected(_ a: String, _ b: String, _ n: Int) -> Bool {
-    var diffCount = 0
-    
-    let a = Array(a)
-    let b = Array(b)
-    
-    for i in (0..<n) {
-        if a[i] != b[i] { diffCount += 1 }
-        if diffCount > 1 { return false }
-    }
-    
-    return true
-}
-
 struct Queue {
-    var inStack = [(Int, Int)]()
-    var outStack = [(Int, Int)]()
-    
-    var isEmpty: Bool { inStack.isEmpty && outStack.isEmpty }
-    
-    mutating func enqueue(_ element: (Int, Int)) {
-        inStack.append(element)
+    typealias Element = (Int, String)
+    var inputStack = [Element]()
+    var outputStack = [Element]()
+    var isEmpty: Bool { inputStack.isEmpty && outputStack.isEmpty }
+    var count: Int { inputStack.count + outputStack.count }
+    mutating func enqueue(_ element: Element) {
+        inputStack.append(element)
     }
-    
-    mutating func dequeue() -> (Int, Int)? {
-        if outStack.isEmpty {
-            outStack = inStack.reversed()
-            inStack = []
-        } 
-        return outStack.popLast()
+    mutating func dequeue() -> Element {
+        if outputStack.isEmpty {
+            outputStack = inputStack.reversed()
+            inputStack.removeAll()
+        }
+        return outputStack.removeLast()
     }
 }
