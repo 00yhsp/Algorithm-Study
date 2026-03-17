@@ -1,21 +1,19 @@
-let input = readLine()!.split(separator: " ").map { Int($0)! }
-let k = input[0], n = input[1]
-
+let kn = readLine()!.split(separator: " ").compactMap { Int($0) }
+let (k, n) = (kn[0], kn[1])
 var arr = [Int]()
-for _ in 1...k { arr.append(Int(readLine()!)!) }
-arr.sort()
+for _ in 0..<k { arr.append(Int(readLine()!)!) }
 
-var start = 1
-var end = arr.max()!
+var start = 1; var end = arr.max()!
 
 while start <= end {
     let mid = (start + end) / 2
+    let count = arr.reduce(0) { $0 + $1 / mid }
 
-    var count = 0
-    for elem in arr { count += elem / mid }
-
-    if count >= n { start = mid + 1 }
-    else { end = mid - 1 }
+    if count >= n {
+        start = mid + 1
+    } else {
+        end = mid - 1
+    }
 }
 
 print(end)
