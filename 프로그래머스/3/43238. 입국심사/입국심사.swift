@@ -2,21 +2,21 @@ import Foundation
 
 func solution(_ n:Int, _ times:[Int]) -> Int {
     var start = 1
-    var end = times.max()! * n
+    var end = 1_000_000_000_000_000_000
     
-    while start < end {
+    while start <= end {
         let mid = (start + end) / 2
-        print("before \(start) \(mid) \(end)")
-        var served = 0
+        var count = 0
         for time in times {
-            served += mid / time
-            if served > n { break }
+            count += mid / time
         }
-        
-        if served < n { start = mid + 1 }
-        else { end = mid }
+        if count < n {
+            start = mid + 1    
+        } else {
+            end = mid - 1
+        }
     }
-    
+
     return start
 }
 
