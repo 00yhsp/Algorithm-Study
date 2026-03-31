@@ -1,20 +1,17 @@
 let n = Int(readLine()!)!
-var arr = [(Int, Int)]()
-var current = 0
-var count = 0
-
-for _ in 0..<n {
-    let input = readLine()!.split(separator: " ").map { Int($0)! }
-    arr.append((input[0], input[1]))
+var arr = [[Int]]()
+for _ in 0..<n { arr.append(readLine()!.split(separator: " ").compactMap { Int($0) }) }
+arr.sort { 
+    if $0[1] == $1[1] { return $0[0] < $1[0] }
+    return $0[1] < $1[1]
 }
+let limit = arr[n - 1][1]
 
-arr.sort { $0.1 == $1.1 ? $0.0 < $1.0 : $0.1 < $1.1 }
-
-for (start, end) in arr {
-    if current <= start {
-        current = end
-        count += 1
-    }
+var count = 0
+var cur = 0
+for i in 0..<n where arr[i][0] >= cur {
+    cur = arr[i][1]
+    count += 1
 }
 
 print(count)
