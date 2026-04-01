@@ -1,16 +1,21 @@
-func solution(_ number: String, _ k: Int) -> String {
-    var k = k
-    var stack = [Character]()
+import Foundation
+
+func solution(_ number:String, _ k:Int) -> String {
+    var number = number.map(String.init)
+    var count = 0
+    var result = [String]()
     
-    for n in number {
-        while k > 0, !stack.isEmpty, stack.last! < n {
-            k -= 1
-            stack.removeLast()
+    for num in number {
+        while let last = result.last, last < num, count < k {
+            result.removeLast()
+            count += 1
         }
-        stack.append(n)
+        result.append(num)
     }
     
-    if k > 0 { stack.removeLast(k) }
-    
-    return String(stack)
+    for _ in 0..<k - count {
+        result.removeLast()
+    }
+        
+    return result.joined()
 }
