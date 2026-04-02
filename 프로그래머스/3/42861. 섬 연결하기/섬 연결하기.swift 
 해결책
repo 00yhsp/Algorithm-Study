@@ -1,0 +1,43 @@
+import Foundation
+
+func solution(_ n:Int, _ costs:[[Int]]) -> Int {
+    let edges = costs.sorted { $0[2] < $1[2] }
+    var ds = DisjointSet(n)
+    var result = 0
+    
+    for edge in edges {
+        if ds.find(edge[0]) == ds.find(edge[1]) { continue }
+        ds.union(edge[0], edge[1])
+        result += edge[2]
+    }
+    
+    return result
+}
+
+struct DisjointSet {
+    var rank: [Int]
+    var parent: [Int]
+    
+    init(_ n: Int) {
+        self.rank = [Int](repeating: 0, count: n + 1)
+        self.parent = Array(0...n)
+    }
+    
+    mutating func find(_ x: Int) -> Int {
+        if x != parent[x] { parent[x] = find(parent[x]) }
+        return parent[x]
+    }
+    
+    mutating func union(_ a: Int, _ b: Int) {
+        let rootA = parent[a]
+        let rootB = parent[b]
+        
+        if rootA == rootB { return }
+        if rank[rootA] < rank[rootB] { parent[rootA] = rootB }
+        else if rank[rootA] > rank[rootB] { parent[rootB] = rootA }
+        else {
+            parent[rootA] = rootB
+            rank[rootA] += 1
+        }
+    }
+}

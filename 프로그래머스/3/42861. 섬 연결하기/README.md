@@ -1,10 +1,10 @@
 # [level 3] 섬 연결하기 - 42861 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42861?language=swift) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42861) 
 
 ### 성능 요약
 
-메모리: 16.4 MB, 시간: 0.31 ms
+메모리: 16.3 MB, 시간: 0.49 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 03월 26일 12:46:23
+2026년 04월 02일 10:20:43
 
 ### 문제 설명
 
@@ -45,7 +45,7 @@
 </thead>
         <tbody><tr>
 <td>4</td>
-<td>[[0,1,1],[0,2,2],[1,2,5],[1,3,1],[2,3,8]]</td>
+<td data-xt="ok">[[0,1,1],[0,2,2],[1,2,5],[1,3,1],[2,3,8]]<xt-dual class="xt-inline" xtid="7a769c79-a883-4388-8f7b-b02805be1ebf" data-xt="ok"><xt-content class="alpha" style="opacity: 0.8;">[[0,1,1],[0,2,2],[1,2,5],[1,3,1],[2,3,8]]</xt-content></xt-dual></td>
 <td>4</td>
 </tr>
 </tbody>
