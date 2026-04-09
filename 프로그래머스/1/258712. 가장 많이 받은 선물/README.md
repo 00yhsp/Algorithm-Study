@@ -1,10 +1,10 @@
 # [level 1] 가장 많이 받은 선물 - 258712 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/258712?language=swift) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/258712) 
 
 ### 성능 요약
 
-메모리: 17.6 MB, 시간: 82.91 ms
+메모리: 17.4 MB, 시간: 59.36 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 10월 07일 18:52:08
+2026년 04월 09일 09:35:46
 
 ### 문제 설명
 
