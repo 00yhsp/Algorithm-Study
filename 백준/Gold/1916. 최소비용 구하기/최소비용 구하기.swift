@@ -1,83 +1,74 @@
+typealias Element = (node: Int, dist: Int)
+
 let n = Int(readLine()!)!
 let m = Int(readLine()!)!
+var graph = [Int: [Element]]()
 
-let INF = 1_000_000_001
-var graph = Array(repeating: Array(repeating: INF, count: n + 1), count: n + 1)
+for _ in 0..<m { 
+    let uvw = readLine()!.split(separator: " ").compactMap { Int($0) }
+    let (u, v, w) = (uvw[0], uvw[1], uvw[2])
 
-for _ in 0..<m {
-    let sew = readLine()!.split(separator: " ").map { Int($0)! }
-    let start = sew[0], end = sew[1], weight = sew[2]
-    graph[start][end] = min(graph[start][end], weight)
+    graph[u, default: []].append((v, w))
 }
 
-let se = readLine()!.split(separator: " ").map { Int($0)! }
-let start = se[0], end = se[1]
+let se = readLine()!.split(separator: " ").compactMap { Int($0) }
+let (s, e) = (se[0], se[1])
+var distances = [Int](repeating: 10_000_000_001, count: n + 1)
+distances[s] = 0
+var heap = Heap { $0.dist < $1.dist }
+heap.push((s, 0))
 
-print(dijkstra(start, end))
+while !heap.isEmpty {
+    let (currentNode, currentDist) = heap.pop()!
+    if distances[currentNode] < currentDist { continue }
 
-func dijkstra(_ start: Int, _ end: Int) -> Int {
-    var distance = Array(repeating: INF, count: n + 1)
-    var heap = Heap<(weight: Int, node: Int)>(priority: { $0.weight < $1.weight })
-
-    distance[start] = 0
-    heap.push((weight: 0, node: start))
-
-    while !heap.isEmpty {
-        let (currentWeight, currentNode) = heap.pop()!
-
-        if currentWeight > distance[currentNode] { continue }
-
-        for nextNode in 1...n {
-            let newDistance = currentWeight + graph[currentNode][nextNode]
-            if newDistance < distance[nextNode] {
-                distance[nextNode] = newDistance
-                heap.push((weight: newDistance, node: nextNode))
-            }
+    for (nextNode, nextDist) in graph[currentNode, default: []] {
+        let candidateDist = distances[currentNode] + nextDist
+        if distances[nextNode] > candidateDist {
+            distances[nextNode] = candidateDist
+            heap.push((nextNode, candidateDist))
         }
     }
-
-    return distance[end]
 }
 
-struct Heap<T> {
-    private var elements: [T]
-    private let priority: (T, T) -> Bool
+print(distances[e])
+
+
+struct Heap {
+    var elements: [Element]
+    var priority: (Element, Element) -> Bool
 
     var isEmpty: Bool { elements.isEmpty }
-
     var count: Int { elements.count }
 
-    var peek: T? { elements.first }
-
-    init(elements: [T] = [], priority: @escaping (T, T) -> Bool) {
+    init(_ elements: [Element] = [], priority: @escaping (Element, Element) -> Bool) {
         self.elements = elements
         self.priority = priority
+        heapify()
+    }
 
-        if !elements.isEmpty {
-            for i in stride(from: elements.count / 2 - 1, through: 0, by: -1) {
-                siftDown(i)
-            }
+    mutating func push(_ element: Element) {
+        elements.append(element)
+        siftUp(count - 1)
+    }
+
+    mutating func pop() -> Element? {
+        guard !isEmpty else { return nil }
+        elements.swapAt(0, count - 1)
+        let popped = elements.removeLast()
+        if !isEmpty { siftDown(0) }
+        return popped
+    }
+    
+    private mutating func heapify() {
+        guard !isEmpty else { return }
+        for i in stride(from: count / 2 - 1, through: 0, by: -1) {
+            siftDown(i)
         }
     }
 
-    mutating func push(_ element: T) {
-        elements.append(element)
-        siftUp(elements.count - 1)
-    }
-
-    @discardableResult
-    mutating func pop() -> T? {
-        guard !elements.isEmpty else { return nil }
-
-        elements.swapAt(0, elements.count - 1)
-        let popped = elements.removeLast()
-
-        if !elements.isEmpty { siftDown(0) }
-        return popped
-    }
-
-    private mutating func siftUp(_ index: Int) {
-        var childIndex = index
+    private mutating func siftUp(_ x: Int) {
+        var childIndex = x
         let child = elements[childIndex]
 
         while childIndex > 0 {
@@ -92,24 +83,22 @@ struct Heap<T> {
         elements[childIndex] = child
     }
 
-    private mutating func siftDown(_ index: Int) {
-        var parentIndex = index
-        let count = elements.count
+    private mutating func siftDown(_ x: Int) {
+        var parentIndex = x
 
         while true {
             let leftIndex = parentIndex * 2 + 1
             let rightIndex = parentIndex * 2 + 2
             var candidateIndex = parentIndex
 
-            if leftIndex < count && priority(elements[leftIndex], elements[candidateIndex]) {
+            if leftIndex < count, priority(elements[leftIndex], elements[candidateIndex]) {
                 candidateIndex = leftIndex
             }
-            if rightIndex < count && priority(elements[rightIndex], elements[candidateIndex]) {
+            if rightIndex < count, priority(elements[rightIndex], elements[candidateIndex]) {
                 candidateIndex = rightIndex
             }
             if candidateIndex == parentIndex { break }
-
-            elements.swapAt(parentIndex, candidateIndex)
+            elements.swapAt(candidateIndex, parentIndex)
             parentIndex = candidateIndex
         }
     }
