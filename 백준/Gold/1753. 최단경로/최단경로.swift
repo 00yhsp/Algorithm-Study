@@ -1,54 +1,52 @@
-typealias Element = (node: Int, distance: Int)
+typealias Element = (node: Int, dist: Int)
+let INF = 3_000_001
 
 let ve = readLine()!.split(separator: " ").compactMap { Int($0) }
 let (v, e) = (ve[0], ve[1])
 let start = Int(readLine()!)!
-let distances = dijkstra(start)
-distances.forEach { print($0 == Int.max / 2 ? "INF" : "\($0)") }
+var graph = [Int: [Element]]()
+for _ in 0..<e {  
+    let uvw = readLine()!.split(separator: " ").compactMap { Int($0) }
+    graph[uvw[0], default: []].append((uvw[1], uvw[2]))
+}
+var heap = Heap { $0.dist < $1.dist }
+heap.push((start, 0))
+var distances = [Int](repeating: INF, count: v + 1)
+distances[start] = 0
 
-func dijkstra(_ s: Int) -> [Int] {
-    var distance = [Int](repeating: Int.max / 2, count: v + 1)
-    var heap = Heap { $0.distance < $1.distance }
-    var graph = [Int: [Element]]()
-    for _ in 0..<e {
-        let input = readLine()!.split(separator: " ").compactMap { Int($0) }
-        let (u, v, w) = (input[0], input[1], input[2])
-        graph[u, default: []].append((v, w))
-    }
-    
-    distance[s] = 0
-    heap.push((s, 0))
+while !heap.isEmpty {
+    let (currentNode, currentDist) = heap.pop()!
+    if distances[currentNode] < currentDist { continue }
 
-    while !heap.isEmpty {
-        let (currentNode, currentDistance) = heap.pop()!
-        if distance[currentNode] < currentDistance { continue }
-
-        for (nextNode, nextDistance) in graph[currentNode, default: []] {
-            let candidateDistance = currentDistance + nextDistance
-            if distance[nextNode] > candidateDistance {
-                distance[nextNode] = candidateDistance
-                heap.push((nextNode, candidateDistance))
-            }
+    for (nextNode, nextDist) in graph[currentNode, default: []] {
+        let candidateDist = distances[currentNode] + nextDist
+        if distances[nextNode] > candidateDist { 
+            distances[nextNode] = candidateDist
+            heap.push((nextNode, candidateDist))
         }
     }
-    distance.removeFirst()
-    return distance
 }
 
+var output = [String]()
+for i in 1...v {
+    output.append(distances[i] == INF ? "INF" : String(distances[i]))
+}
+print(output.joined(separator: "\n"))
 
 struct Heap {
-    var elements = [Element]()
-    let priority: (Element, Element) -> Bool
+    var elements: [Element]
+    var priority: (Element, Element) -> Bool
 
     var isEmpty: Bool { elements.isEmpty }
     var count: Int { elements.count }
 
-    init(priority: @escaping (Element, Element) -> Bool) {
+    init(elements: [Element] = [], priority: @escaping (Element, Element) -> Bool) {
+        self.elements = elements
         self.priority = priority
         heapify()
     }
 
-    mutating func heapify() {
+    private mutating func heapify() {
         guard !isEmpty else { return }
         for i in stride(from: count / 2 - 1, through: 0, by: -1) {
             siftDown(i)
@@ -61,16 +59,16 @@ struct Heap {
     }
 
     mutating func pop() -> Element? {
-        guard !isEmpty else { return nil }
+        guard !elements.isEmpty else { return nil }
         elements.swapAt(0, count - 1)
         let popped = elements.removeLast()
-        if !isEmpty { siftDown(0) }
+        if !elements.isEmpty { siftDown(0) }
         return popped
     }
 
-    mutating func siftUp(_ x: Int) {
+    private mutating func siftUp(_ x: Int) {
         var childIndex = x
-        let child = elements[childIndex]
+        let child = elements[x]
 
         while childIndex > 0 {
             let parentIndex = (childIndex - 1) / 2
@@ -81,10 +79,11 @@ struct Heap {
             elements[childIndex] = parent
             childIndex = parentIndex
         }
+
         elements[childIndex] = child
     }
 
-    mutating func siftDown(_ x: Int) {
+    private mutating func siftDown(_ x: Int) {
         var parentIndex = x
 
         while true {
@@ -98,12 +97,9 @@ struct Heap {
             if rightIndex < count, priority(elements[rightIndex], elements[candidateIndex]) {
                 candidateIndex = rightIndex
             }
-
-            if candidateIndex == parentIndex { break }
-
+            if parentIndex == candidateIndex { break }
             elements.swapAt(parentIndex, candidateIndex)
             parentIndex = candidateIndex
         }
-        
     }
 }
