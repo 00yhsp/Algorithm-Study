@@ -1,44 +1,42 @@
+typealias Edge = (start: Int, end: Int, dist: Int)
+let INF = 50_000_001
+
 let tc = Int(readLine()!)!
-let INF = 5000001
 
-for _ in 0..<tc { solve() }
-
-func solve() {
+for _ in 0..<tc {
     let nmw = readLine()!.split(separator: " ").compactMap { Int($0) }
     let (n, m, w) = (nmw[0], nmw[1], nmw[2])
-    var edges = [(Int, Int, Int)]()
-
+    
+    var edges = [Edge]()
     for _ in 0..<m {
-        let edge = readLine()!.split(separator: " ").compactMap { Int($0) }
-        edges.append((edge[0], edge[1], edge[2]))
-        edges.append((edge[1], edge[0], edge[2]))
+        let set = readLine()!.split(separator: " ").compactMap { Int($0) }
+        let edge1 = (set[0], set[1], set[2])
+        let edge2 = (set[1], set[0], set[2])
+        edges.append(edge1)
+        edges.append(edge2)
     }
-
     for _ in 0..<w {
-        let edge = readLine()!.split(separator: " ").compactMap { Int($0) }
-        edges.append((edge[0], edge[1], -edge[2]))
+        let set = readLine()!.split(separator: " ").compactMap { Int($0) }
+        let edge = (set[0], set[1], -set[2])
+        edges.append(edge)
     }
 
-    bellmanFord(n, edges) ? print("YES") : print("NO")
+    print(bellmanFord(n, edges) ? "YES" : "NO")
 }
 
-func bellmanFord(_ n: Int, _ edges: [(Int, Int, Int)]) -> Bool {
-    var distance = Array(repeating: INF, count: n + 1)
-    distance[1] = 0
+func bellmanFord(_ n: Int, _ edges: [Edge]) -> Bool {
+    var distances = [Int](repeating: INF, count: n + 1)
+    distances[1] = 0
 
-    for _ in 1..<n {
+    for _ in 0..<n - 1 {
         for (u, v, w) in edges {
-            if distance[u] + w < distance[v] {
-                distance[v] = distance[u] + w
-            }
+            if distances[u] + w < distances[v] { distances[v] = distances[u] + w }
         }
     }
 
     for (u, v, w) in edges {
-        if distance[u] + w < distance[v] {
-            return true
-        }
+        if distances[u] + w < distances[v] { return true }
     }
-
+    
     return false
 }
