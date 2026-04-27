@@ -4,26 +4,26 @@ let arr = readLine()!.split(separator: " ").compactMap { Int($0) }.sorted()
 var count = 0
 
 for i in 0..<n {
-    var left = 0; var right = n - 1
+    var start = 0; var end = n - 1
     
-    while left < right {
-        if left == i {
-            left += 1
+    while start < end {
+        if start == i {
+            start += 1
             continue
         }
-        if right == i {
-            right -= 1
+        if end == i {
+            end -= 1
             continue
         }
         
-        let s = arr[left] + arr[right]
+        let s = arr[start] + arr[end]
         if s == arr[i] {
             count += 1
             break
         } else if s < arr[i] {
-            left += 1
+            start += 1
         } else {
-            right -= 1
+            end -= 1
         }
     }
 }
