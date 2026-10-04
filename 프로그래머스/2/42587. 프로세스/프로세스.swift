@@ -1,20 +1,21 @@
 import Foundation
 
 func solution(_ priorities:[Int], _ location:Int) -> Int {
-    var rank = 0
     var queue = Queue(elements: priorities)
-    var max = priorities.sorted(by: >)
-    
+    var sortedPriorities = priorities.sorted(by: >)
+    var pointer = 0
+    var result = 0
     while !queue.isEmpty {
-        let first = queue.dequeue()!
-        if first.1 < max[rank] { queue.enqueue(first) }
-        else { 
-            rank += 1
-            if first.0 == location { return rank }
+        let (idx, priority) = queue.dequeue()!
+        if sortedPriorities[pointer] == priority {
+            pointer += 1
+            result += 1
+            if idx == location { return result }
+        } else {
+            queue.enqueue((idx, priority))
         }
     }
-    
-    return 0
+    return result
 }
 
 struct Queue {
