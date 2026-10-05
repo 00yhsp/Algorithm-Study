@@ -1,21 +1,23 @@
 import Foundation
 
 func solution(_ number:String, _ k:Int) -> String {
-    var number = number.map(String.init)
-    var count = 0
-    var result = [String]()
-    
-    for num in number {
-        while let last = result.last, last < num, count < k {
+    var result = [Character]()
+    var remaining = k
+
+    for digit in number {
+        while remaining > 0,
+              let last = result.last,
+              last < digit {
             result.removeLast()
-            count += 1
+            remaining -= 1
         }
-        result.append(num)
+
+        result.append(digit)
+    }
+
+    if remaining > 0 {
+        result.removeLast(remaining)
     }
     
-    for _ in 0..<k - count {
-        result.removeLast()
-    }
-        
-    return result.joined()
+    return String(result)
 }
