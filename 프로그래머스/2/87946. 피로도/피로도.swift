@@ -4,22 +4,17 @@ func solution(_ k:Int, _ dungeons:[[Int]]) -> Int {
     var result = 0
     var visited = [Bool](repeating: false, count: dungeons.count)
     
-    func backTrack(_ available: Int, _ routes: Int) {
-        result = max(routes, result)
-        
-        for i in 0..<dungeons.count {
-            let require = dungeons[i][0]
-            let cost = dungeons[i][1]
-            
-            if !visited[i] && available >= require {
-                visited[i] = true
-                backTrack(available - cost, routes + 1)
-                visited[i] = false
-            }
+    func dfs(_ tired: Int, _ depth: Int) {
+        result = max(result, depth)
+        for i in dungeons.indices {
+            if visited[i] { continue }
+            if dungeons[i][0] > tired { continue }
+            visited[i] = true
+            dfs(tired - dungeons[i][1], depth + 1)
+            visited[i] = false
         }
     }
-    
-    backTrack(k, 0)
-    
+
+    dfs(k, 0)
     return result
 }
