@@ -1,22 +1,21 @@
 import Foundation
 
 func solution(_ n:Int, _ lost:[Int], _ reserve:[Int]) -> Int {
-    var lostSet = Set<Int>(lost)
-    var reserveSet = Set<Int>(reserve)
-    
-    let intersection = lostSet.intersection(reserveSet)
-    lostSet.subtract(intersection)
-    reserveSet.subtract(intersection)
-    
-    var sortedReserve = Array(reserveSet).sorted()
-    
-    for r in sortedReserve {
-        if lostSet.contains(r - 1) {
-            lostSet.remove(r - 1)
-        } else if lostSet.contains(r + 1) {
-            lostSet.remove(r + 1)
+    let common = Set(lost).intersection(Set(reserve))
+    var lost = Set(lost).subtracting(common)
+    var reserve = Set(reserve).subtracting(common)
+
+    for i in 1...n {
+        guard lost.contains(i) else { continue }
+
+        if reserve.contains(i - 1) {
+            reserve.remove(i - 1)
+            lost.remove(i)
+        } else if reserve.contains(i + 1) {
+            reserve.remove(i + 1)
+            lost.remove(i)
         }
     }
-    
-    return n - lostSet.count
+
+    return n - lost.count
 }
