@@ -1,6 +1,6 @@
 import Foundation
 
-func solution(_ n:Int, _ times:[Int]) -> Int {
+func solution(_ n:Int, _ times:[Int]) -> Int64 {
     var start = 1
     var end = 1_000_000_000_000_000_000
     
@@ -10,13 +10,12 @@ func solution(_ n:Int, _ times:[Int]) -> Int {
         for time in times {
             count += mid / time
         }
-        if count < n {
-            start = mid + 1    
-        } else {
+        if count >= n {
             end = mid - 1
+        } else {
+            start = mid + 1
         }
     }
-
-    return start
+    
+    return Int64(start)
 }
-
