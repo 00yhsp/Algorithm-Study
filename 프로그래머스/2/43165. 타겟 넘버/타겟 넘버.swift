@@ -3,50 +3,16 @@ import Foundation
 func solution(_ numbers:[Int], _ target:Int) -> Int {
     var result = 0
     
-    func bfs() {
-        var queue = Queue()
-        queue.enqueue((0, 0))
-        
-        while !queue.isEmpty {
-            let (currentNode, currentDepth) = queue.dequeue()
-            if currentDepth == numbers.count {
-                if currentNode == target { result += 1 }
-                continue
-            }
-            
-            queue.enqueue((currentNode + numbers[currentDepth], currentDepth + 1))
-            queue.enqueue((currentNode - numbers[currentDepth], currentDepth + 1))
+    func dfs(_ sum: Int, _ idx: Int) {
+        if idx == numbers.count {
+            if target == sum { result += 1 }
+            return
         }
+        dfs(sum + numbers[idx], idx + 1)
+        dfs(sum - numbers[idx], idx + 1)
     }
     
-    bfs()
-    
-    return result
-}
+    dfs(0, 0)
 
-struct Queue {
-    typealias Element = (Int, Int)
-    
-    var inputStack = [Element]()
-    var outputStack = [Element]()
-    
-    var isEmpty: Bool { inputStack.isEmpty && outputStack.isEmpty }
-    var count: Int { inputStack.count + outputStack.count }
-    
-    init(_ elements: [Element] = []) {
-        outputStack = elements.reversed()
-    }
-    
-    mutating func enqueue(_ element: Element) {
-        inputStack.append(element)
-    }
-    
-    @discardableResult
-    mutating func dequeue() -> Element {
-        if outputStack.isEmpty { 
-            outputStack = inputStack.reversed()
-            inputStack.removeAll()
-        }
-        return outputStack.removeLast()
-    }
+    return result
 }
