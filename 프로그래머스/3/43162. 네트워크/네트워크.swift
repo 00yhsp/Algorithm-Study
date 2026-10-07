@@ -1,32 +1,28 @@
 import Foundation
 
 func solution(_ n:Int, _ computers:[[Int]]) -> Int {
-    var visited = [Bool](repeating: false, count: n)
     var graph = [Int: [Int]]()
+    var visited = [Bool](repeating: false, count: n)
     var result = 0
     
-    for i in 0..<n {
-        for j in 0..<computers[i].count {
-            if i == j || computers[i][j] == 0 { continue }
-            graph[i, default: []].append(j)
+    for r in 0..<n {
+        for c in 0..<n where computers[r][c] == 1 {
+            graph[r, default: []].append(c)
+            graph[c, default: []].append(r)
         }
     }
     
-    func dfs(_ node: Int) {
-        visited[node] = true
-        
-        for nextNode in graph[node, default: []] {
-            if !visited[nextNode] {
-                dfs(nextNode)
-            }
+    func dfs(_ idx: Int) {
+        visited[idx] = true
+        for nextNode in graph[idx, default: []] where !visited[nextNode] {
+            dfs(nextNode)
         }
     }
     
-    for i in 0..<n {
-        if !visited[i] { 
-            dfs(i) 
-            result += 1
-        }
+    for i in 0..<n where !visited[i] {
+        dfs(i)
+        result += 1
     }
+    
     return result
 }
